@@ -473,8 +473,8 @@
       ]
     },
     "E:\\Open the door\\Learn And Grow Up\\Learn And Grow Up\\Crypto WORLD\\Cyrpto projects\\nft-marketplace-dapp-polygon\\contracts\\Market.sol": {
-      "lastModificationDate": 1645308788323,
-      "contentHash": "95cc5dd936e46e79ea2ed6d53f1ee9c0",
+      "lastModificationDate": 1646130430468,
+      "contentHash": "e32e5688c742e4c0b0551d4ec4f2f98c",
       "sourceName": "contracts/Market.sol",
       "solcConfig": {
         "version": "0.8.3",
@@ -513,7 +513,7 @@
       ]
     },
     "E:\\Open the door\\Learn And Grow Up\\Learn And Grow Up\\Crypto WORLD\\Cyrpto projects\\nft-marketplace-dapp-polygon\\contracts\\NFT.sol": {
-      "lastModificationDate": 1644839320287,
+      "lastModificationDate": 1645373221453,
       "contentHash": "55e18838863d8dda9e5f369fdd37811d",
       "sourceName": "contracts/NFT.sol",
       "solcConfig": {

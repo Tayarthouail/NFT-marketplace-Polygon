@@ -68,6 +68,7 @@ contract NFTMarket is ReentrancyGuard {
       false
     );
 
+    // Transfer the nft(ownerShip) to the another owner.
     IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
 
     emit MarketItemCreated(
@@ -81,7 +82,7 @@ contract NFTMarket is ReentrancyGuard {
     );
   }
 
-  /* Creates the sale of a marketplace item */
+  /* Buy the items */
   /* Transfers ownership of the item, as well as funds between parties */
   function createMarketSale(
     address nftContract,

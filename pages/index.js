@@ -21,26 +21,30 @@ export default function Home() {
     loadNFTs();
   },[])
 
-  /* Load the NFTS*/
+  /* Load the unsold NFTS*/
   async function loadNFTs() {
       // create the provider
       const provider = new ethers.providers.JsonRpcProvider();
       // create an instance of the contracts
-      const nftContract = new ethers.Contract(nftaddress, NFT.abi,provider); 
+      const tokenContract = new ethers.Contract(nftaddress, NFT.abi,provider);
       const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider);
+
+
+      /* Returns all unsold market items (array of arrays) */
       const data = await marketContract.fetchMarketItems();
 
       const items = await Promise.all(data.map(async i => {
-        // get NFT URI from the struct
-        const nftUri = await nftContract.tokenURI(i.tokenId);
+        // get NFT URI to fetch the metadata
+        const tokenUri = await tokenContract.tokenURI(i.tokenId);
+        console.log(tokenUri);
+
         //fetch the meta data from the URI
-        const meta = await axios.get(nftUri);
-        console.log(meta);
+        const meta = await axios.get(tokenUri);
         const price = ethers.utils.formatUnits(i.price.toString(), "ether");
 
         let item = {
           price,
-          itemId: i.itemId.toNumber(),
+          tokenId: i.tokenId.toNumber(),
           seller : i.seller,
           owner: i.owner,
           name: meta.data.name,
@@ -53,6 +57,8 @@ export default function Home() {
       setLoadingState("loaded");
   }
 
+  /* buy the item*/
+  /* Transfers ownership of the item, as well as funds between parties */
   async function buyNft(nft) {
     // create instance of web3 model
     const web3Modal = new Web3Modal();
@@ -63,14 +69,15 @@ export default function Home() {
 
     // give the user the possibility to sign and execute transaction in the market
     const signer = provider.getSigner();
+    
     const contract = new ethers.Contract(nftmarketaddress, Market.abi,signer);
 
     const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
     // create a marketSale
-    const transaction = await contract.createMarketSale(nftaddress, ntf.tokenId, { value: price});
+    const transaction = await contract.createMarketSale(nftaddress, nft.tokenId, { value: price});
     
     // wait for the transaction to complete
-    await transaction.await();
+    await transaction.wait();
     // refresh the page to update the ntf num
     loadNFTs();
   
@@ -87,7 +94,7 @@ export default function Home() {
           {
             nfts.map((nft, i) => (
               <div key={i} className="border shadow rounded-xl overflow-hidden">
-                <img src={nft.image} alt="image"/>
+                <img src={nft.image} alt={nft.name}/>
                 <div className="p-4">
                   <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.name}</p>
                   <div style={{ height: '70px', overflow: 'hidden' }}>
