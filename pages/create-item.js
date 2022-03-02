@@ -57,20 +57,7 @@ export default function CreateItems() {
           console.log(name, description, price);
           // if(!name || !description ||!price || fileUrl) return
           
-          // Js object to data 
-          // const data = JSON.stringify({
-          //   name, description, image: fileUrl
-          // });
-
-        
           try {
-
-            // const data = {
-            //   name, 
-            //   description,
-            //   price,
-            //   image: fileUrl
-            // }
 
             const data = {
               name: name,
@@ -81,9 +68,7 @@ export default function CreateItems() {
             }
             console.log(data);
 
-    
             const added = await ipfsClient.add(JSON.stringify(data));
-
             const url = `https://ipfs.infura.io/ipfs/${added.path}`
             console.log(url)
             /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
