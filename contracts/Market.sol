@@ -4,10 +4,11 @@ pragma solidity ^0.8.3;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 import "hardhat/console.sol";
 
-contract NFTMarket is ReentrancyGuard {
+contract NFTMarket is ERC721URIStorage {
   using Counters for Counters.Counter;
   Counters.Counter private _itemIds;
   Counters.Counter private _itemsSold;
@@ -15,7 +16,7 @@ contract NFTMarket is ReentrancyGuard {
   address payable owner;
   uint256 listingPrice = 0.025 ether;
 
-  constructor() {
+  constructor() ERC721("NFT market", "NFM") {
     owner = payable(msg.sender);
   }
 
@@ -45,13 +46,15 @@ contract NFTMarket is ReentrancyGuard {
   function getListingPrice() public view returns (uint256) {
     return listingPrice;
   }
+
+
   
   /* Places an item for sale on the marketplace */
   function createMarketItem(
     address nftContract,
     uint256 tokenId,
     uint256 price
-  ) public payable nonReentrant {
+  ) public payable {
     require(price > 0, "Price must be at least 1 wei");
     require(msg.value == listingPrice, "Price must be equal to listing price");
 
@@ -82,12 +85,12 @@ contract NFTMarket is ReentrancyGuard {
     );
   }
 
-  /* Buy the items */
+  /* When someone buy NFT */
   /* Transfers ownership of the item, as well as funds between parties */
   function createMarketSale(
     address nftContract,
     uint256 itemId
-    ) public payable nonReentrant {
+    ) public payable {
     uint price = idToMarketItem[itemId].price;
     uint tokenId = idToMarketItem[itemId].tokenId;
     require(msg.value == price, "Please submit the asking price in order to complete the purchase");
@@ -99,6 +102,21 @@ contract NFTMarket is ReentrancyGuard {
     _itemsSold.increment();
     payable(owner).transfer(listingPrice);
   }
+
+
+  /* the user can resell the NFT after purchused */
+  function reSellTokens(uint256 tokenId, uint256 price) public payable {
+    require(idToMarketItem[tokenId].owner == msg.sender, "Only item owner can perform this operation");
+    require(msg.value == listingPrice,"Listing price should be equal to the price");
+      idToMarketItem[tokenId].sold = false;
+      idToMarketItem[tokenId].seller = payable(msg.sender);
+      idToMarketItem[tokenId].owner = payable(address(this));
+      idToMarketItem[tokenId].price = price;
+      _itemsSold.decrement();
+      _transfer(msg.sender, address(this), tokenId);
+
+  }
+
 
   /* Returns all unsold market items */
   function fetchMarketItems() public view returns (MarketItem[] memory) {

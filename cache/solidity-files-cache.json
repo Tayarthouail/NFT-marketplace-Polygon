@@ -473,8 +473,8 @@
       ]
     },
     "E:\\Open the door\\Learn And Grow Up\\Learn And Grow Up\\Crypto WORLD\\Cyrpto projects\\nft-marketplace-dapp-polygon\\contracts\\Market.sol": {
-      "lastModificationDate": 1646130430468,
-      "contentHash": "e32e5688c742e4c0b0551d4ec4f2f98c",
+      "lastModificationDate": 1646303839241,
+      "contentHash": "ed225578ea022e3840ea3c90a53a326a",
       "sourceName": "contracts/Market.sol",
       "solcConfig": {
         "version": "0.8.3",
@@ -503,6 +503,7 @@
         "@openzeppelin/contracts/utils/Counters.sol",
         "@openzeppelin/contracts/security/ReentrancyGuard.sol",
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
         "hardhat/console.sol"
       ],
       "versionPragmas": [

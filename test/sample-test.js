@@ -19,12 +19,14 @@ describe("NFTMarket", ()=> {
 
       const nftContractAddress = nft.address;
 
+      console.log(nftContractAddress, marketAddress);
+
       /* get the listing price */ 
       let listingPrice = await market.getListingPrice();
 
       listingPrice = listingPrice.toString();
 
-      /* How much are we seeling the item for */
+      /* How much are we selling the item for */
       const auctionPrice = ethers.utils.parseUnits("100", "ether");
 
       /* create or min an NFT*/
@@ -32,25 +34,25 @@ describe("NFTMarket", ()=> {
       await nft.createToken("https://www.mytokenlocation.com2");
 
 
-      /* put both token on sale (listing) */
-      await market.createMarketItem(nftContractAddress,
-                                      1, auctionPrice, 
-                                      {value : listingPrice });
+      /* put token on sale (listing) */
+      await market.createMarketItem(nftContractAddress, 1, auctionPrice,{value : listingPrice });
 
-      await market.createMarketItem(nftContractAddress,
-                                      2, auctionPrice, 
-                                      {value: listingPrice});
 
       /* _ it the first address is the seller address */
       const [_, buyerAddress] = await ethers.getSigners();
 
-      /* create Market Sale */
-      await market.connect(buyerAddress).createMarketSale(nftContractAddress, 2, {value : auctionPrice});
+      /* execute sale of token to another buyer */
+      await market.connect(buyerAddress).createMarketSale(nftContractAddress, 1, {value : auctionPrice});
+
+
+      // /* resell token  */
+      // await market.connect(buyerAddress).reSellTokens(nftContractAddress, 1,{value:auctionPrice});
       
       // fetch all the unsold items
       let items = await market.fetchMarketItems();
       // console.log("items", items);
       
+      /* query for and return the unsold items */
       items = await Promise.all(items.map(async i => {
         const itemUri = await nft.tokenURI(i.tokenId);
 
@@ -69,11 +71,3 @@ describe("NFTMarket", ()=> {
     
     
 });
-
-// uint itemId;
-//     address nftContract;
-//     uint256 tokenId;
-//     address payable seller;
-//     address payable owner;
-//     uint256 price;
-//     bool sold;
