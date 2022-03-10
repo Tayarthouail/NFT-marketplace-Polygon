@@ -25,7 +25,7 @@ function Marketplace({ Component, pageProps }) {
           </Link>
           <Link href="/my-dashboard">
             <a className="mr-6 text-pink-500">
-              Creator Dashboard
+            Dashboard
             </a>
           </Link>
         </div>

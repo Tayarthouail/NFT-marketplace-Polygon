@@ -6,12 +6,9 @@ import Web3Modal from "web3modal";
 
 
 /*Import reference of the contract address*/
-import {nftaddress, nftmarketaddress} from "../config";
+import {nftmarketaddress} from "../config";
 
-import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
-import Market from "../artifacts/contracts/Market.sol/NFTMarket.json";
-
-
+import Market from "../artifacts/contracts/Marketplace.sol/Marketplace.json";
 
 
 export default function Home() {
@@ -27,7 +24,7 @@ export default function Home() {
       // create the provider
       const provider = new ethers.providers.JsonRpcProvider();
       // create an instance of the contracts
-      const tokenContract = new ethers.Contract(nftaddress, NFT.abi,provider);
+      // const tokenContract = new ethers.Contract(nftaddress, NFT.abi,provider);
       const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider);
 
 
@@ -36,7 +33,7 @@ export default function Home() {
 
       const items = await Promise.all(data.map(async i => {
         // get NFT URI to fetch the metadata
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
+        const tokenUri = await marketContract.tokenURI(i.tokenId);
         console.log(tokenUri);
 
         //fetch the meta data from the URI
@@ -75,7 +72,7 @@ export default function Home() {
 
     const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
     // create a marketSale
-    const transaction = await contract.createMarketSale(nftaddress, nft.tokenId, { value: price});
+    const transaction = await contract.createMarketSale(nft.tokenId, { value: price});
     
     // wait for the transaction to complete
     await transaction.wait();

@@ -5,11 +5,9 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import axios from "axios";
 
-import {nftmarketaddress,nftaddress} from "../config";
+import {nftmarketaddress} from "../config";
 
-import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
-import MARKET from "../artifacts/contracts/Market.sol/NFTMarket.json";
-
+import Market from "../artifacts/contracts/Marketplace.sol/Marketplace.json";
 
 const MyDashboard = () => {
 
@@ -28,13 +26,12 @@ const MyDashboard = () => {
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
 
-        const marketContract = new ethers.Contract(nftmarketaddress, MARKET.abi, signer);
-        const tokenContract = new ethers.Contract(nftaddress, NFT.abi, signer);
+        const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
 
-        const data = await marketContract.fetchItemsCreated();
+        const data = await marketContract.fetchItemsListed();
 
         const items = await Promise.all(data.map(async i => {
-            const tokenUri = await tokenContract.tokenURI(i.tokenId);
+            const tokenUri = await marketContract.tokenURI(i.tokenId);
             const meta = await axios.get(tokenUri);
             const price = ethers.utils.formatUnits(i.price.toString(), "ether");
             
@@ -80,4 +77,4 @@ const MyDashboard = () => {
   )
 }
 
-export default MyDashboard
+export default MyDashboard;

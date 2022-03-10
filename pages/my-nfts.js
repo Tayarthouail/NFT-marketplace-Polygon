@@ -3,21 +3,33 @@ import {useState, useEffect} from "react";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import axios from "axios";
+import {useRouter} from "next/router";
 
 // get the references of the addresses
-import {nftmarketaddress, nftaddress} from "../config";
+import {nftmarketaddress} from "../config";
 
-import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
-import Market from "../artifacts/contracts/Market.sol/NFTMarket.json";
+
+import Market from "../artifacts/contracts/Marketplace.sol/Marketplace.json";
 
 
 const MyNFTs = () => {
     const [nfts, setNfts] = useState([]);
     const [loadingState, setLoadingState] = useState("not-loaded");
+console.log(nfts);
 
     useEffect(()=> {
         loadSoldNFTS();
     },[])
+
+    const router = useRouter();
+
+
+    //fetch the nft.id & nft.URI using Routing
+    function fetchIdURI(nft) {
+      console.log("nft", nft);
+      router.push(`/resell-nft?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`);
+    }
+
 
     /*Load the the */
     const loadSoldNFTS = async () => {
@@ -31,15 +43,15 @@ const MyNFTs = () => {
 
         // create the instance of both smart contract
         const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
-        const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
-
+    
         // return all the NFT that I bought
         const data = await marketContract.fetchMyNFTs();
 
         const items = await Promise.all(data.map( async i => {
-            const tokenUri = await tokenContract.tokenURI(i.tokenId);
+            const tokenURI = await marketContract.tokenURI(i.tokenId);
+            console.log(tokenURI);
             // fetch the metadata from the URI
-            const meta = await axios.get(tokenUri);
+            const meta = await axios.get(tokenURI);
             
             //converting wei to ether
             const price = ethers.utils.formatUnits(i.price.toString(), "ether");
@@ -50,7 +62,8 @@ const MyNFTs = () => {
                 owner: i.owner,
                 name: meta.data.name,
                 description : meta.data.description,   
-                image: meta.data.image
+                image: meta.data.image,
+                tokenURI
             }
 
             return item;
@@ -80,6 +93,8 @@ const MyNFTs = () => {
                 </div>
                 <div className="p-4 bg-black">
                   <p className="text-2xl mb-4 font-bold text-white">{nft.price} ETH</p>
+                  <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" 
+                  onClick={()=> fetchIdURI(nft)}>List</button>
                 </div>
               </div>
             ))

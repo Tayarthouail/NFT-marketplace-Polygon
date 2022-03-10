@@ -11,7 +11,7 @@ async function main() {
 
 
   fs.writeFileSync('./config.js', `
-  export const marketplaceAddress = "${nftMarketplace.address}"
+  export const nftmarketaddress = "${nftMarketplace.address}"
   `)
 
 }
