@@ -22,8 +22,8 @@ module.exports = {
   },
 
   // connect hardhat with infura endpoint
-  mumbai: {
-    url: `https://ropsten.infura.io/v3/${projectId}`,
+  rinkeby: {
+    url: `https://rinkeby.infura.io/v3/${projectId}`,
     accounts:[privateKey]
   },
 

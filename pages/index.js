@@ -22,7 +22,7 @@ export default function Home() {
   /* Load the unsold NFTS*/
   async function loadNFTs() {
       // create the provider
-      const provider = new ethers.providers.JsonRpcProvider();
+      const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
       // create an instance of the contracts
       // const tokenContract = new ethers.Contract(nftaddress, NFT.abi,provider);
       const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider);

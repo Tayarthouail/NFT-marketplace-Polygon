@@ -39,7 +39,19 @@ contract Marketplace is ERC721URIStorage {
     owner = payable(msg.sender);
   }
 
-  /* create & mint token */
+    /*Update listing price of the contract */
+  function updateListingPrice(uint256 _listingPrice) payable public {
+      require(owner == msg.sender, "Only MarketPlace owner can update the listing price");
+      listingPrice = _listingPrice;
+  }
+
+
+  /* Returns the listing price of the contract */
+  function getListingPrice() public view returns (uint256) {
+    return listingPrice;
+  }
+
+  /* Mints a token and lists it in the marketplace */
   function createToken(string memory tokenURI, uint256 price) public payable returns (uint256) {
      _itemIds.increment();
      uint256 newTokenId = _itemIds.current();
@@ -79,20 +91,7 @@ contract Marketplace is ERC721URIStorage {
   }
 
 
-  /*Update listing price of the contract */
-  function updateListingPrice(uint256 _listingPrice) payable public {
-      require(owner == msg.sender, "Only MarketPlace owner can update the listing price");
-      listingPrice = _listingPrice;
-  }
-
-
-  /* Returns the listing price of the contract */
-  function getListingPrice() public view returns (uint256) {
-    return listingPrice;
-  }
-
-
-  /* When someone buy NFT */
+  /* Creates the sale of a marketplace item */
   /* Transfers ownership of the item, as well as funds between parties */
   function createMarketSale (
     uint256 tokenId

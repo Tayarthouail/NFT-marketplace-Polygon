@@ -8,14 +8,11 @@ import {useRouter} from "next/router";
 // get the references of the addresses
 import {nftmarketaddress} from "../config";
 
-
 import Market from "../artifacts/contracts/Marketplace.sol/Marketplace.json";
-
 
 const MyNFTs = () => {
     const [nfts, setNfts] = useState([]);
     const [loadingState, setLoadingState] = useState("not-loaded");
-console.log(nfts);
 
     useEffect(()=> {
         loadSoldNFTS();

@@ -18,7 +18,7 @@ const MyDashboard = () => {
         loadNfts();
     })
 
-    // Load all the sold nft & the created nft
+    // /* Returns only items a user has listed */
     const loadNfts = async () => {
         // create an instance of web3 modal
         const web3Modal = new Web3Modal;
